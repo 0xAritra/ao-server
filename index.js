@@ -6,16 +6,59 @@ import { createDataItemSigner } from "@permaweb/aoconnect"
 import dotenv from "dotenv"
 import OpenAI from "openai"
 import fs from "fs"
+import multer from "multer"
+const upload = multer({ dest: "uploads/" })
 
+import { v2 as cloudinary } from "cloudinary"
+
+const app = express()
+
+app.use(express.json())
 dotenv.config()
+
+cloudinary.config({
+  cloud_name: "dcmninsrn",
+  api_key: process.env.PIC_API,
+  api_secret: process.env.PIC_SECRET,
+})
+app.post("/upload", upload.single("image"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image uploaded" })
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path)
+
+    res.json({
+      image: result.secure_url,
+      public_id: result.public_id,
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "An error occurred" })
+  }
+})
+
+app.get("/display/:public_id", async (req, res) => {
+  try {
+    const { public_id } = req.params
+    const result = cloudinary.url(public_id, {
+      width: 500,
+      height: 500,
+      crop: "fill",
+    })
+
+    res.json({ image: result })
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: "An error occurred" })
+  }
+})
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
-const app = express()
-
-app.use(express.json())
 // Connect to AO
 const ao = connect({
   MU_URL: "https://mu.ao-testnet.xyz",
