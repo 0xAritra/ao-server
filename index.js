@@ -195,6 +195,35 @@ app.get("/test", async (req, res) => {
   }
 })
 
+app.post("/price", async (req, res) => {
+  let response = null
+  new Promise(async (resolve, reject) => {
+    try {
+      response = await axios.get(
+        "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest",
+        {
+          headers: {
+            "X-CMC_PRO_API_KEY": process.env.PRICE_API,
+          },
+        }
+      )
+    } catch (ex) {
+      response = null
+      // error
+      console.log(ex)
+      reject(ex)
+    }
+    if (response) {
+      // success
+      const json = response.data
+      const data = json.data.map((price) => ({ name: price.name, price: price.quote.USD.price }))
+      const topPrice = data.slice(0, 10)
+      resolve(json)
+      res.json(topPrice)
+    }
+  })
+})
+
 // Start the server
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
