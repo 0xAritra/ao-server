@@ -267,6 +267,64 @@ app.post("/price", async (req, res) => {
   })
 })
 
+app.get("/all", (req, res) => {
+  const endpoints = [
+    {
+      endpoint: "/upload",
+      method: "POST",
+      description: "Uploads an image to Cloudinary",
+    },
+    {
+      endpoint: "/display/:public_id",
+      method: "GET",
+      description: "Displays an image from Cloudinary",
+    },
+    {
+      endpoint: "/join",
+      method: "GET",
+      description: "Joins a process",
+    },
+    {
+      endpoint: "/send-message",
+      method: "POST",
+      description: "Sends a message",
+    },
+    {
+      endpoint: "/gpt",
+      method: "GET",
+      description:
+        "Generates a random fact about web 3 or crypto or blockchain using OpenAI GPT-3.5",
+    },
+    {
+      endpoint: "/askgpt",
+      method: "POST",
+      description: "Asks a question to OpenAI GPT-3.5",
+    },
+    {
+      endpoint: "/news",
+      method: "POST",
+      description: "Fetches news articles related to a keyword",
+    },
+    {
+      endpoint: "/test",
+      method: "GET",
+      description: "Test endpoint",
+    },
+    {
+      endpoint: "/price",
+      method: "POST",
+      description: "Fetches top 10 cryptocurrency prices",
+    },
+    {
+      endpoint: "/all",
+      method: "GET",
+      description: "Lists all available endpoints with descriptions",
+    },
+  ]
+
+  res.json(endpoints)
+})
+
 // Start the server
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
