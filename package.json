@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "@permaweb/aoconnect": "^0.0.51",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "newsapi": "^2.4.1",
+    "nodemon": "^3.1.0",
+    "openai": "^4.30.0"
+  },
+  "type": "module"
+}
