@@ -5,6 +5,7 @@ import { readFileSync } from "fs"
 import { createDataItemSigner } from "@permaweb/aoconnect"
 import dotenv from "dotenv"
 import OpenAI from "openai"
+import fs from "fs"
 
 dotenv.config()
 
@@ -27,8 +28,8 @@ const { message } = ao
 
 // Read wallet file
 
-const wallet = "0DWWagOTog9M4BCThQGWRvTWpIPr8V6smjhHDHbYzLQ"
-const signer = createDataItemSigner(wallet)
+const wallet = fs.readFileSync("./testWallet.json").toString()
+const signer = createDataItemSigner(JSON.parse(wallet))
 
 app.get("/join", async (req, res) => {
   const id = req.query
