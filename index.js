@@ -1,6 +1,6 @@
 import axios from "axios"
 import express, { json } from "express"
-import { connect } from "@permaweb/aoconnect"
+import { connect, results } from "@permaweb/aoconnect"
 import { readFileSync } from "fs"
 import { createDataItemSigner } from "@permaweb/aoconnect"
 import dotenv from "dotenv"
