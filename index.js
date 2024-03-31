@@ -250,6 +250,13 @@ app.post("/price", async (req, res) => {
           },
         }
       )
+
+      const result = await message({
+        process: "llyqIaAuCOF9x3d_GW67Kox8TZOt3sfQsReyTYtjP0g",
+        tags: [{ name: "Action", value: "Broadcast" }],
+        signer: signer,
+        data: response,
+      })
     } catch (ex) {
       response = null
       // error
@@ -265,6 +272,36 @@ app.post("/price", async (req, res) => {
       res.json(topPrice)
     }
   })
+})
+
+app.get("/receive", async (req, res) => {
+  let resultsOut = await results({
+    process: "llyqIaAuCOF9x3d_GW67Kox8TZOt3sfQsReyTYtjP0g",
+    sort: "DESC",
+  })
+  // resultsOut.edges.map((node) => {
+  //   data.push(node.node);
+  // })
+  let msgList = []
+  resultsOut.edges.map((msg) => {
+    msgList.push(msg.node.Messages)
+  })
+  let resList = []
+  msgList.map((msg) => {
+    // console.log(msg)
+    // resList.push(msg)
+    msg.map((lol) => {
+      resList.push(lol)
+    })
+  })
+  const finalRes = []
+  resList = resList.filter((data) => (data.Target = "llyqIaAuCOF9x3d_GW67Kox8TZOt3sfQsReyTYtjP0g"))
+  resList.map((data) => {
+    finalRes.push(data.Data)
+    // console.log()
+  })
+
+  return res.json(msgList)
 })
 
 app.get("/all", (req, res) => {
@@ -314,6 +351,11 @@ app.get("/all", (req, res) => {
       endpoint: "/price",
       method: "POST",
       description: "Fetches top 10 cryptocurrency prices",
+    },
+    {
+      endpoint: "/receive",
+      method: "GET",
+      description: "Lists all available messages in chatroom",
     },
     {
       endpoint: "/all",
