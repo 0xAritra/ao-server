@@ -300,7 +300,7 @@ app.get("/receive", async (req, res) => {
     // console.log()
   })
 
-  return res.json(msgList)
+  return res.json(finalRes)
 })
 
 app.get("/all", (req, res) => {
