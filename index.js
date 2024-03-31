@@ -250,26 +250,25 @@ app.post("/price", async (req, res) => {
           },
         }
       )
-
-      const result = await message({
-        process: "llyqIaAuCOF9x3d_GW67Kox8TZOt3sfQsReyTYtjP0g",
-        tags: [{ name: "Action", value: "Broadcast" }],
-        signer: signer,
-        data: response,
-      })
+      if (response) {
+        // success
+        const json = response.data
+        const data = json.data.map((price) => ({ name: price.name, price: price.quote.USD.price }))
+        const topPrice = data.slice(0, 10)
+        const result = await message({
+          process: "llyqIaAuCOF9x3d_GW67Kox8TZOt3sfQsReyTYtjP0g",
+          tags: [{ name: "Action", value: "Broadcast" }],
+          signer: signer,
+          data: JSON.stringify(topPrice),
+        })
+        resolve(json)
+        res.json(topPrice)
+      }
     } catch (ex) {
       response = null
       // error
       console.log(ex)
       reject(ex)
-    }
-    if (response) {
-      // success
-      const json = response.data
-      const data = json.data.map((price) => ({ name: price.name, price: price.quote.USD.price }))
-      const topPrice = data.slice(0, 10)
-      resolve(json)
-      res.json(topPrice)
     }
   })
 })
